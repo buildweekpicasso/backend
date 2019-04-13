@@ -1,0 +1,18 @@
+{
+  "name": "picasso",
+  "version": "1.0.0",
+  "description": "Lambda School Build Week April 15th to 29th 2019",
+  "main": "index.js",
+  "author": "Peter Murphy and Lowell Richardson",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "helmet": "^3.16.0",
+    "knex": "^0.16.5"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.11",
+    "sqlite3": "^4.0.6"
+  }
+}
