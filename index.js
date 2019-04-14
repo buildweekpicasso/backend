@@ -1,6 +1,8 @@
 require('dotenv').config();
 
-const server = require('./server.js');
+// const server = require('./server.js');
+const server = express();
+server.use(express.json());
 
 const PYTHON = 'python3.7';
 
