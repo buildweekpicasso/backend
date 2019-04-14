@@ -7,6 +7,12 @@ server.use(express.json());
 
 const PYTHON = 'python3.7';
 
+server.get('/', (_req, res) => {
+  res.json({
+    message: 'Hello!!!'
+  });
+});
+
 server.post('/', (req, res) => {
   console.log(JSON.stringify(req.body));
 
