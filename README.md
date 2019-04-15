@@ -2,28 +2,37 @@
 
 https://bw-picasso.herokuapp.com/
 
-POST /auth/register
+### POST /auth/register
 
 Expects JSON on the request body:
+
+```json
 {
-"username": "example",
-"password": "example"
+  "username": "example",
+  "password": "example"
 }
+```
 
 Returns 201 if user successfully created
 
-POST /auth/login
+### POST /auth/login
 
 Expects JSON on the request body:
+
+```json
 {
-"username": "example",
-"password": "example"
+  "username": "example",
+  "password": "example"
 }
+```
 
 Returns 200 if successfully logged in with token:
+
+```json
 {
-"token": "example"
+  "token": "example"
 }
+```
 
 ## Image upload
 
