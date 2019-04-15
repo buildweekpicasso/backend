@@ -42,10 +42,11 @@ Returns 200 if successfully logged in with token:
 }
 ```
 
-POST /images/process
+### POST /images/process
 
 Expects JSON on the request body:
-```
+
+```json
 {
   "style": "example URL:,
   "content": "example URL"
@@ -53,7 +54,8 @@ Expects JSON on the request body:
 ```
 
 Returns 200 if images were processed successfully with:
-```
+
+```json
 {
   "output_url": "example URL"
 }
@@ -73,9 +75,9 @@ then add a change handler or submit hanlder that uploads the file to `/images/up
 const handleChange = ({ target: { files } }) => {
   const [file] = files
   let body = new FormData()
-  body.append("style-image", file)
+  body.append("user-image", file)
   Axios.post(`${API_URL}/images/upload/`, body)
 }
 ```
 
-**Note:** The field name needs to be `style-image`
+**Note:** The field name needs to be `user-image`
