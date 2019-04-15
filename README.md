@@ -48,7 +48,7 @@ Expects JSON on the request body:
 
 ```json
 {
-  "style": "example URL:,
+  "style": "example URL",
   "content": "example URL"
 }
 ```
