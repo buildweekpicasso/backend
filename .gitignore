@@ -13,3 +13,5 @@ node_modules/
 # ESLint and VSCode config
 .eslintrc*
 .vscode/
+
+*.ignore*
