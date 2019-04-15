@@ -38,16 +38,12 @@ router.post('/upload', (req, res) => {
 // for the sake of mocking this out, I think we can
 // leave separate for now
 router.post('/process', (req, res) => {
-  console.log('posting the process thing?');
   const { style, content } = req.body;
-  console.log(style, content);
   ImageUtils.processDeepAI(style, content)
     .then(image => {
-      console.log(image);
-      res.status(200).json({ url: image });
+      res.status(200).json(image);
     })
     .catch(err => {
-      console.log('uh oh', err);
       res.status(500).json({ error: err });
     })
 });
