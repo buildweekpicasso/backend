@@ -16,6 +16,7 @@ server.get('/', (req, res) => {
   res.end();
 });
 
+server.use(express.static('static'));
 server.use('/auth', authRouter);
 server.use('/images', imagesRouter);
 
