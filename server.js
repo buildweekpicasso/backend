@@ -10,11 +10,11 @@ server.use(express.json());
 server.use(helmet());
 server.use(cors());
 
-// server.get('/', (req, res) => {
-//   // res.statusCode = 302;
-//   // res.setHeader("Location", "https://github.com/buildweekpicasso/backend");
-//   // res.end();
-// });
+server.get('/', (req, res) => {
+  res.statusCode = 302;
+  res.setHeader('Location', 'https://github.com/buildweekpicasso/backend');
+  res.end();
+});
 
 server.use('/auth', authRouter);
 server.use('/images', imagesRouter);
