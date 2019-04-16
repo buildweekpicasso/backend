@@ -6,9 +6,10 @@ module.exports = {
 };
 
 async function processDeepAI(styleURL, contentURL) {
+  const fs = require('fs');
   const res = await deepai.callStandardApi("neural-style", {
-    style: styleURL,
-    content: contentURL
+    style: fs.createReadStream(styleURL),
+    content: fs.createReadStream(contentURL)
   });
   return res;
 }

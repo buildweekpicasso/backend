@@ -23,7 +23,7 @@ const upload = multer({
   storage,
   limits: 3 * MB,
   fileFilter,
-}).single('style-image');
+}).single('content-image');
 
 router.get('/styles', (_req, res) => {
   images
@@ -54,6 +54,31 @@ router.post('/process', (req, res) => {
     .catch(err => {
       res.status(500).json({ error: err });
     });
+});
+
+router.post('/uploadprocess', (req, res) => {
+  upload(req, res, err => {
+    if(err) {
+      res.status(500).json({ error: err, message: 'There was a problem saving the uploaded file' });
+    }
+    const { styleID } = req.body;
+    images
+      .findStyleById(parseInt(styleID, 10))
+      .then(style => {
+        // console.log('static/styles/' + style.imageUrl, req.file.path);
+        const styleURL = 'static/styles/' + style.imageUrl;
+        ImageUtils.processDeepAI(styleURL, req.file.path)
+          .then(image => {
+            res.status(200).json(image);
+          })
+          .catch(processErr => {
+            res.status(500).json({ error: processErr, message: 'Error processing the images by sending them to the Deep AI API.' });
+          });
+      })
+      .catch(findStyleErr => {
+        res.status(500).json({ error: findStyleErr, message: 'Error finding style by ID, possibly does not exist?' });
+      })
+  });
 });
 
 module.exports = router;

@@ -6,6 +6,7 @@ module.exports = {
   findBy,
   findById,
   getStyles,
+  findStyleById,
 };
 
 function find() {
@@ -27,6 +28,12 @@ async function add(image) {
 
 function findById(id) {
   return db('images')
+    .where({ id })
+    .first();
+}
+
+function findStyleById(id) {
+  return db('styles')
     .where({ id })
     .first();
 }
