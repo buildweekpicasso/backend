@@ -63,9 +63,11 @@ router.post('/uploadprocess', (req, res) => {
     }
     const { id } = req.body;
     images
-      .findStyleById(id)
+      .findStyleById(parseInt(id, 10))
       .then(style => {
-        ImageUtils.processDeepAI(style.imageUrl, req.file.path)
+        // console.log('static/styles/' + style.imageUrl, req.file.path);
+        const styleURL = 'static/styles/' + style.imageUrl;
+        ImageUtils.processDeepAI(styleURL, req.file.path)
           .then(image => {
             res.status(200).json(image);
           })
