@@ -57,7 +57,7 @@ router.post('/process', (req, res) => {
       .findStyleById(parseInt(styleID, 10))
       .then(style => {
         const style_url = `${BASE_URL}styles/${style.imageUrl}`;
-        const content_url = `${BASE_URL}styles/${req.file.filename}`;
+        const content_url = `${BASE_URL}uploads/${req.file.filename}`;
         ImageUtils.process({
           fast: true,
           request_key: uuid(),
