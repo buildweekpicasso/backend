@@ -56,6 +56,7 @@ router.post('/process', (req, res) => {
     });
 });
 
+// @TODO: Need to get the user id from the json web token to look up the correct email address to send to
 router.post('/uploadprocess', (req, res) => {
   upload(req, res, err => {
     if(err) {
@@ -69,6 +70,7 @@ router.post('/uploadprocess', (req, res) => {
         const styleURL = 'static/styles/' + style.imageUrl;
         ImageUtils.processDeepAI(styleURL, req.file.path)
           .then(image => {
+            ImageUtils.emailImage('mynock101@gmail.com', image.output_url);
             res.status(200).json(image);
           })
           .catch(processErr => {
