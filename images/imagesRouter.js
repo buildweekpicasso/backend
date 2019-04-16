@@ -56,4 +56,27 @@ router.post('/process', (req, res) => {
     });
 });
 
+router.post('/uploadprocess', (req, res) => {
+  upload(req, res, err => {
+    if(err) {
+      res.status(500).json({ error: err, message: 'There was a problem saving the uploaded file' });
+    }
+    const { id } = req.body;
+    images
+      .findStyleById(id)
+      .then(style => {
+        ImageUtils.processDeepAI(style.imageUrl, req.file.path)
+          .then(image => {
+            res.status(200).json(image);
+          })
+          .catch(processErr => {
+            res.status(500).json({ error: processErr, message: 'Error processing the images by sending them to the Deep AI API.' });
+          });
+      })
+      .catch(findStyleErr => {
+        res.status(500).json({ error: findStyleErr, message: 'Error finding style by ID, possibly does not exist?' });
+      })
+  });
+});
+
 module.exports = router;
