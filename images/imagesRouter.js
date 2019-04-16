@@ -61,9 +61,9 @@ router.post('/uploadprocess', (req, res) => {
     if(err) {
       res.status(500).json({ error: err, message: 'There was a problem saving the uploaded file' });
     }
-    const { id } = req.body;
+    const { styleID } = req.body;
     images
-      .findStyleById(parseInt(id, 10))
+      .findStyleById(parseInt(styleID, 10))
       .then(style => {
         // console.log('static/styles/' + style.imageUrl, req.file.path);
         const styleURL = 'static/styles/' + style.imageUrl;
