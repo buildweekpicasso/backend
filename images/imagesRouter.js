@@ -60,7 +60,7 @@ router.post('/process', (req, res) => {
         const content_url = `${BASE_URL}styles/${req.file.filename}`;
         ImageUtils.process({
           fast: true,
-          request_key: '23123',
+          request_key: uuid(),
           style_url,
           content_url,
         })
