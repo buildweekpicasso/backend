@@ -51,7 +51,6 @@ router.post('/process', (req, res) => {
         message: 'There was a problem saving the uploaded file',
       });
     }
-    console.log(req.file.filename);
     const { styleID } = req.body;
     images
       .findStyleById(parseInt(styleID, 10))
