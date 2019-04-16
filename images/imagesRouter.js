@@ -5,7 +5,7 @@ const uuid = require('uuid/v4');
 const images = require('./imagesModel.js');
 const ImageUtils = require('./imageUtils.js');
 
-const BASE_URL = process.env.HEROKU_URL || 'https://bw-picasso.herokuapp.com/';
+const BASE_URL = 'https://quiet-shore-93010.herokuapp.com/';
 
 const fileFilter = (_req, file, cb) => {
   file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)
