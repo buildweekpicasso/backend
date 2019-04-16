@@ -5,10 +5,15 @@ module.exports = {
   find,
   findBy,
   findById,
+  getStyles,
 };
 
 function find() {
   return db('images');
+}
+
+function getStyles() {
+  return db('styles');
 }
 
 function findBy(filter) {
