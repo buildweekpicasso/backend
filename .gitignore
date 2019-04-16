@@ -9,3 +9,9 @@ node_modules/
 
 # dotenv environment variables file
 .env
+
+# ESLint and VSCode config
+.eslintrc*
+.vscode/
+
+*.ignore*
