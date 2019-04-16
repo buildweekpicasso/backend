@@ -23,7 +23,7 @@ const upload = multer({
   storage,
   limits: 3 * MB,
   fileFilter,
-}).single('style-image');
+}).single('content-image');
 
 router.get('/styles', (_req, res) => {
   images
