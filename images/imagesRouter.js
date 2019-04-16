@@ -5,7 +5,7 @@ const uuid = require('uuid/v4');
 const images = require('./imagesModel.js');
 const ImageUtils = require('./imageUtils.js');
 
-const BASE_URL = process.env.HEROKU_URL || 'https://bw-picasso.herokuapp.com/';
+const BASE_URL = 'https://quiet-shore-93010.herokuapp.com/';
 
 const fileFilter = (_req, file, cb) => {
   file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)
@@ -51,13 +51,12 @@ router.post('/process', (req, res) => {
         message: 'There was a problem saving the uploaded file',
       });
     }
-    console.log(req.file.filename);
     const { styleID } = req.body;
     images
       .findStyleById(parseInt(styleID, 10))
       .then(style => {
         const style_url = `${BASE_URL}styles/${style.imageUrl}`;
-        const content_url = `${BASE_URL}styles/${req.file.filename}`;
+        const content_url = `${BASE_URL}uploads/${req.file.filename}`;
         ImageUtils.process({
           fast: true,
           request_key: uuid(),
