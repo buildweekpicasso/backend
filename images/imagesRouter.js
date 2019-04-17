@@ -77,6 +77,8 @@ router.post('/process', (req, res) => {
   });
 });
 
+const trace = msg => x => (console.log(msg, x), x);
+
 router.post('/process-deep', authMiddleware, (req, res) => {
   console.log('\n\n\n\n****** PROCESS_DEEP CALLED');
   const request_key = uuid();
@@ -90,10 +92,8 @@ router.post('/process-deep', authMiddleware, (req, res) => {
       });
     }
     const { styleID } = req.body;
-    Promise.all([
-      users.findBy({ username }).first(),
-      images.findStyleById(styleID),
-    ])
+    Promise.all([users.findBy({ username }), images.findStyleById(styleID)])
+      .then(trace('\n\n\n **** What is here?'))
       .then(([user, style]) => {
         const style_url = `${BASE_URL}styles/${style.imageUrl}`;
         const content_url = `${BASE_URL}uploads/${req.file.filename}`;
