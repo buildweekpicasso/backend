@@ -3,10 +3,7 @@ exports.up = knex =>
     exists =>
       exists &&
       knex.schema.table('users', users => {
-        users
-          .string('email', 128)
-          .notNullable()
-          .unique();
+        users.string('email', 128);
       }),
   );
 

@@ -3,10 +3,7 @@ exports.up = knex =>
     exists =>
       exists &&
       knex.schema.table('images', images => {
-        images
-          .string('image_url', 256)
-          .notNullable()
-          .unique();
+        images.string('image_url', 256);
       }),
   );
 
