@@ -4,6 +4,7 @@ const uuid = require('uuid/v4');
 const authMiddleware = require('../auth/authMiddleware');
 
 const images = require('./imagesModel.js');
+const users = require('../users/usersModel');
 const userImages = require('./userImagesModel.js');
 const ImageUtils = require('./imageUtils.js');
 const BASE_URL = 'https://quiet-shore-93010.herokuapp.com/';
@@ -82,8 +83,18 @@ function maybeAuthMiddleware(req, res, next) {
   return req.body.fast ? next() : authMiddleware(req, res, next);
 }
 
-router.put('request/:id', (req, res) => {
-  // @TODO
+router.put('request/:key', (req, res) => {
+  userImages
+    .updateByRequestKey(key, {
+      output_url: req.output_url,
+    })
+    .then(entry => res.status(200).json(entry))
+    .catch(error => {
+      res.status(500).json({
+        error,
+        message: 'Unable to find that request_key',
+      });
+    });
 });
 
 module.exports = router;
