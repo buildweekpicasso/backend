@@ -53,7 +53,7 @@ router.post('/process', (req, res) => {
       .then(style => {
         const style_url = `${BASE_URL}styles/${style.imageUrl}`;
         const content_url = `${BASE_URL}uploads/${req.file.filename}`;
-        imageUtils.process({
+        imageUtils.processImage({
           fast,
           request_key,
           style_url,

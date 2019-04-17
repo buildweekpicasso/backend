@@ -3,7 +3,7 @@ const sg = require('@sendgrid/mail');
 const sgKey = process.env.SENDGRID_API_KEY;
 sg.setApiKey(sgKey);
 
-const process = ({ fast, request_key, style_url, content_url }) => {
+const processImage = ({ fast, request_key, style_url, content_url }) => {
   console.log({ request_key, style_url, content_url });
   return fetch(`http://3.14.3.46:5000/${fast ? 'fast' : 'deep'}transform`, {
     method: 'post',
@@ -24,6 +24,6 @@ const emailImage = (email, imagePath) => {
 }
 
 module.exports = {
-  process,
+  processImage,
   emailImage,
 };
