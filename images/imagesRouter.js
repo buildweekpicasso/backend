@@ -94,7 +94,7 @@ router.post('/process-deep', authMiddleware, (req, res) => {
     const { styleID } = req.body;
     Promise.all([users.findBy({ username }), images.findStyleById(styleID)])
       .then(trace('\n\n\n **** What is here?'))
-      .then(([user, style]) => {
+      .then(([[user], style]) => {
         const style_url = `${BASE_URL}styles/${style.imageUrl}`;
         const content_url = `${BASE_URL}uploads/${req.file.filename}`;
         images
@@ -102,15 +102,29 @@ router.post('/process-deep', authMiddleware, (req, res) => {
             image_url: content_url,
           })
           .then(image_id => {
-            userImages.add({
-              user_id: user.id,
-              image_id,
-              style_id: styleID,
-              request_key,
-            });
+            userImages
+              .add({
+                user_id: user.id,
+                image_id,
+                style_id: style.id,
+                request_key,
+              })
+              .catch(error => {
+                console.error('Something went wrong');
+                res.status(500).json({
+                  message:
+                    'Something went wrong when inserting to the user_images table',
+                  error,
+                });
+              });
           })
-          .catch(err => {
+          .catch(error => {
             console.error('\n\n\n**** ERROR:', err);
+            res.status(500).json({
+              message:
+                'Something went wrong when inserting to the images table',
+              error,
+            });
           });
         ImageUtils.process({
           fast: false,
