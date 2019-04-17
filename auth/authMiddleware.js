@@ -6,11 +6,12 @@ module.exports = (req, res, next) => {
   const token = req.headers.authorization;
 
   if (token) {
-    jwt.verify(token, secret, (err, _decodedToken) => {
+    jwt.verify(token, secret, (err, decoded) => {
       if (err) {
         res.status(401).json({ message: 'Invalid Credentials' });
       } else {
-        req.isAuthorized = true;
+        console.log('\n\n\n***** DECODED:', JSON.stringify(decoded, null, 2));
+        req.username = decoded.username;
         next();
       }
     });
