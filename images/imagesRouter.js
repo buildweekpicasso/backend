@@ -45,22 +45,21 @@ router.post('/process', (req, res) => {
       });
     }
     const { styleID } = req.body;
-    // @TODO: get `fast` from req.body
-    let fast = true;
     const request_key = uuid();
     images
       .findStyleById(styleID)
       .then(style => {
         const style_url = `${BASE_URL}styles/${style.imageUrl}`;
         const content_url = `${BASE_URL}uploads/${req.file.filename}`;
-        imageUtils.processImage({
-          fast,
+
+        ImageUtils.process({
+          fast: true,
           request_key,
           style_url,
           content_url,
         })
           .then(image => {
-            res.status(200).json(image);
+            res.status(200).json({ ...image, style_url, content_url });
           })
           .catch(processErr => {
             res.status(500).json({
@@ -79,9 +78,64 @@ router.post('/process', (req, res) => {
   });
 });
 
-function maybeAuthMiddleware(req, res, next) {
-  return req.body.fast ? next() : authMiddleware(req, res, next);
-}
+router.post('/process-deep', authMiddleware, (req, res) => {
+  const request_key = uuid();
+  const { username } = req;
+  const user = users.findBy({ username });
+  console.log('\n\n\n\n****** USER:', user);
+  upload(req, res, err => {
+    if (err) {
+      res.status(500).json({
+        error: err,
+        message: 'There was a problem saving the uploaded file',
+      });
+    }
+    const { styleID } = req.body;
+    images
+      .findStyleById(styleID)
+      .then(style => {
+        const style_url = `${BASE_URL}styles/${style.imageUrl}`;
+        const content_url = `${BASE_URL}uploads/${req.file.filename}`;
+        images
+          .addReturningId({
+            image_url: content_url,
+          })
+          .then(image_id => {
+            userImages.add({
+              user_id: user.id,
+              image_id,
+              style_id: styleID,
+              request_key,
+            });
+          })
+          .catch(err => {
+            console.error('\n\n\n**** ERROR:', err);
+          });
+        ImageUtils.process({
+          fast: false,
+          request_key,
+          style_url,
+          content_url,
+        })
+          .then(success => {
+            res.status(200).json(success);
+          })
+          .catch(processErr => {
+            res.status(500).json({
+              error: processErr,
+              message:
+                'Error processing the images by sending them to the Deep AI API.',
+            });
+          });
+      })
+      .catch(findStyleErr => {
+        res.status(500).json({
+          error: findStyleErr,
+          message: 'Error finding style by ID, possibly does not exist?',
+        });
+      });
+  });
+});
 
 router.put('/request/:key', (req, res) => {
   const { key } = req.params;
