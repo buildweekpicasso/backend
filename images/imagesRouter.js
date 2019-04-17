@@ -60,7 +60,7 @@ router.post('/process', (req, res) => {
           content_url,
         })
           .then(image => {
-            res.status(200).json(image);
+            res.status(200).json({ ...image, style_url, content_url });
           })
           .catch(processErr => {
             res.status(500).json({
