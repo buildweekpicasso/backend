@@ -89,7 +89,10 @@ router.post('/processdeep', authMiddleware, (req, res) => {
       });
     }
     const { styleID } = req.body;
-    Promise.all([users.findBy({ username }), images.findStyleById(styleID)])
+    Promise.all([
+      users.findBy({ username }).first(),
+      images.findStyleById(styleID),
+    ])
       .then(([user, style]) => {
         const style_url = `${BASE_URL}styles/${style.imageUrl}`;
         const content_url = `${BASE_URL}uploads/${req.file.filename}`;
