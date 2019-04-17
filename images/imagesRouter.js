@@ -6,7 +6,7 @@ const authMiddleware = require('../auth/authMiddleware');
 const images = require('./imagesModel.js');
 const users = require('../users/usersModel');
 const userImages = require('./userImagesModel.js');
-const ImageUtils = require('./imageUtils.js');
+const imageUtils = require('./imageUtils.js');
 const BASE_URL = 'https://quiet-shore-93010.herokuapp.com/';
 
 const fileFilter = (_req, file, cb) => {
@@ -51,6 +51,7 @@ router.post('/process', (req, res) => {
       .then(style => {
         const style_url = `${BASE_URL}styles/${style.imageUrl}`;
         const content_url = `${BASE_URL}uploads/${req.file.filename}`;
+
         ImageUtils.process({
           fast: true,
           request_key,
@@ -143,7 +144,24 @@ router.put('/request/:key', (req, res) => {
     .updateByRequestKey(key, {
       output_url,
     })
-    .then(entry => res.status(200).json(entry))
+    .then(entry => {
+      userImages
+        .findByRequestKey(key)
+        .then(userImage => {
+          console.log('userImage', userImage);
+          users.findById(userImage.user_id)
+          .then(user => {
+            imageUtils.emailImage(user.email, output_url);
+            res.status(200).json(entry);
+          })
+          .catch(findUserErr => {
+            res.status(404).json({ error: findUserErr, message: 'Error finding an existing user by ID on the user_image in /request/:key' });
+          });
+        })
+        .catch(findUserImageErr => {
+          res.status(404).json({ error: findUserImageErr, message: 'Error finding an existing userImage by ID' });
+        });
+    })
     .catch(error => {
       res.status(500).json({
         error,
