@@ -12,8 +12,14 @@ function findBy(filter) {
   return db('user_images').where(filter);
 }
 
-async function add(image) {
-  const [id] = await db('user_images').insert(image);
+async function add({ user_id, image_id, style_id, request_key }) {
+  const [id] = await db('user_images').insert({
+    user_id,
+    image_id,
+    style_id,
+    request_key,
+    output_url: null,
+  });
   return findById(id);
 }
 
