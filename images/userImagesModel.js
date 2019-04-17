@@ -4,7 +4,7 @@ module.exports = {
   add,
   findBy,
   findById,
-  findByRequestId,
+  findByRequestKey,
 };
 
 function findBy(filter) {
@@ -22,8 +22,8 @@ function findById(id) {
     .first();
 }
 
-function findByRequestId(request_id) {
+function findByRequestKey(request_key) {
   return db('user_images')
-    .where({ request_id })
+    .where({ request_key })
     .first();
 }
