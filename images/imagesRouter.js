@@ -80,7 +80,8 @@ router.post('/process', (req, res) => {
 router.post('/process-deep', (req, res) => {
   console.log('\n\n\n\n****** PROCESS_DEEP CALLED');
   const request_key = uuid();
-  const { username } = req;
+  const username = req.username || 'bob';
+  console.log('\n\n\n\n****** USERNAME', username);
   upload(req, res, err => {
     if (err) {
       res.status(500).json({
