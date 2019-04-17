@@ -27,3 +27,10 @@ function findByRequestKey(request_key) {
     .where({ request_key })
     .first();
 }
+
+function updateByRequestKey(request_key, obj) {
+  return db('user_images')
+    .where({ request_key })
+    .update(obj)
+    .returning('*');
+}
