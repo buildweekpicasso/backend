@@ -5,7 +5,7 @@ exports.seed = knex => {
       user_id: 1,
       image_id: 1,
       style_id: 1,
-      request_key: '123-abc',
+      request_key: '123abc',
     },
   ];
   return knex('user_images').insert(userImages);

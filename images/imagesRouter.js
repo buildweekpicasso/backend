@@ -83,10 +83,12 @@ function maybeAuthMiddleware(req, res, next) {
   return req.body.fast ? next() : authMiddleware(req, res, next);
 }
 
-router.put('request/:key', (req, res) => {
+router.put('/request/:key', (req, res) => {
+  const { key } = req.params;
+  const { output_url } = req.body;
   userImages
     .updateByRequestKey(key, {
-      output_url: req.output_url,
+      output_url,
     })
     .then(entry => res.status(200).json(entry))
     .catch(error => {
