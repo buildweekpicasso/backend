@@ -94,42 +94,12 @@ router.post('/process-deep', authMiddleware, (req, res) => {
     const { styleID } = req.body;
     // users.findBy({username}).then(trace("\n\n\n**** IS THIS A VALID USER?"))
     Promise.all([users.findBy({ username }), images.findStyleById(styleID)])
-      .then(async ([[user], style]) => {
+      .then(([[user], style]) => {
         const style_url = `${BASE_URL}styles/${style.imageUrl}`;
         const content_url = `${BASE_URL}uploads/${req.file.filename}`;
         console.log('\n\n\n\n\n ******* USER: ', user);
         console.log('\n\n\n\n\n ******* STYLE: ', style);
-        await images
-          .addReturningId({
-            user_id: user.id,
-            image_url: content_url,
-          })
-          .then(trace('\n\n\n ***** THIS SHOULD BE AN IMAGE ID'))
-          .then(image_id => {
-            userImages
-              .add({
-                user_id: user.id,
-                image_id,
-                style_id: style.id,
-                request_key,
-              })
-              .catch(error => {
-                console.error('Something went wrong');
-                res.status(500).json({
-                  message:
-                    'Something went wrong when inserting to the user_images table',
-                  error,
-                });
-              });
-          })
-          .catch(error => {
-            console.error('\n\n\n**** ERROR:', err);
-            res.status(500).json({
-              message:
-                'Something went wrong when inserting to the images table',
-              error,
-            });
-          });
+
         ImageUtils.process({
           fast: false,
           request_key,
@@ -137,6 +107,37 @@ router.post('/process-deep', authMiddleware, (req, res) => {
           content_url,
         })
           .then(success => {
+            images
+              .addReturningId({
+                user_id: user.id,
+                image_url: content_url,
+              })
+              .then(trace('\n\n\n ***** THIS SHOULD BE AN IMAGE ID'))
+              .then(image_id => {
+                userImages
+                  .add({
+                    user_id: user.id,
+                    image_id,
+                    style_id: style.id,
+                    request_key,
+                  })
+                  .catch(error => {
+                    console.error('Something went wrong');
+                    res.status(500).json({
+                      message:
+                        'Something went wrong when inserting to the user_images table',
+                      error,
+                    });
+                  });
+              })
+              .catch(error => {
+                console.error('\n\n\n**** ERROR:', err);
+                res.status(500).json({
+                  message:
+                    'Something went wrong when inserting to the images table',
+                  error,
+                });
+              });
             res.status(200).json(success);
           })
           .catch(processErr => {
