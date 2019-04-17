@@ -80,8 +80,6 @@ router.post('/process', (req, res) => {
 router.post('/process-deep', authMiddleware, (req, res) => {
   const request_key = uuid();
   const { username } = req;
-  const user = users.findBy({ username });
-  console.log('\n\n\n\n****** USER:', user);
   upload(req, res, err => {
     if (err) {
       res.status(500).json({
@@ -90,9 +88,8 @@ router.post('/process-deep', authMiddleware, (req, res) => {
       });
     }
     const { styleID } = req.body;
-    images
-      .findStyleById(styleID)
-      .then(style => {
+    Promise.all([users.findBy({ username }), images.findStyleById(styleID)])
+      .then(([user, style]) => {
         const style_url = `${BASE_URL}styles/${style.imageUrl}`;
         const content_url = `${BASE_URL}uploads/${req.file.filename}`;
         images
