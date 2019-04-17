@@ -91,13 +91,21 @@ router.put('/request/:key', (req, res) => {
       output_url,
     })
     .then(entry => {
-      users.findById(entry.user_id)
-        .then(user => {
-          imageUtils.emailImage(user.email, output_url);
-          res.status(200).json(entry);
+      userImages
+        .findByRequestKey(key)
+        .then(userImage => {
+          console.log('userImage', userImage);
+          users.findById(userImage.user_id)
+          .then(user => {
+            imageUtils.emailImage(user.email, output_url);
+            res.status(200).json(entry);
+          })
+          .catch(findUserErr => {
+            res.status(404).json({ error: findUserErr, message: 'Error finding an existing user by ID on the user_image in /request/:key' });
+          });
         })
-        .catch(findUserErr => {
-          res.send(404).json({ error: findUserErr, message: 'Error finding an existing user by ID on the user_image in /request/:key' });
+        .catch(findUserImageErr => {
+          res.status(404).json({ error: findUserImageErr, message: 'Error finding an existing userImage by ID' });
         });
     })
     .catch(error => {

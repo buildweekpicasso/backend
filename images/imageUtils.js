@@ -13,6 +13,7 @@ const processImage = ({ fast, request_key, style_url, content_url }) => {
 };
 
 const emailImage = (email, imagePath) => {
+  console.log('sending email to: ', email, imagePath);
   const msg = {
     to: email,
     from: 'santa@bwpicasso.com',
