@@ -1,10 +1,11 @@
 const router = require('express').Router();
 const multer = require('multer');
 const uuid = require('uuid/v4');
+const authMiddleware = require('../auth/authMiddleware');
 
 const images = require('./imagesModel.js');
+const userImages = require('./userImagesModel.js');
 const ImageUtils = require('./imageUtils.js');
-
 const BASE_URL = 'https://quiet-shore-93010.herokuapp.com/';
 
 const fileFilter = (_req, file, cb) => {
@@ -34,15 +35,6 @@ router.get('/styles', (_req, res) => {
     .catch(err => res.status(500).json({ message: err }));
 });
 
-// @TODO: Add error handling
-router.post('/upload', (req, res) => {
-  upload(req, res, err => {
-    err
-      ? res.status(500).json({ message: err })
-      : res.status(200).json({ message: 'Success', file: req.file.path });
-  });
-});
-
 router.post('/process', (req, res) => {
   upload(req, res, err => {
     if (err) {
@@ -52,14 +44,17 @@ router.post('/process', (req, res) => {
       });
     }
     const { styleID } = req.body;
+    // @TODO: get `fast` from req.body
+    let fast = true;
+    const request_key = uuid();
     images
-      .findStyleById(parseInt(styleID, 10))
+      .findStyleById(styleID)
       .then(style => {
         const style_url = `${BASE_URL}styles/${style.imageUrl}`;
         const content_url = `${BASE_URL}uploads/${req.file.filename}`;
         ImageUtils.process({
-          fast: true,
-          request_key: uuid(),
+          fast,
+          request_key,
           style_url,
           content_url,
         })
@@ -81,6 +76,14 @@ router.post('/process', (req, res) => {
         });
       });
   });
+});
+
+function maybeAuthMiddleware(req, res, next) {
+  return req.body.fast ? next() : authMiddleware(req, res, next);
+}
+
+router.put('request/:id', (req, res) => {
+  // @TODO
 });
 
 module.exports = router;
