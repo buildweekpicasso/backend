@@ -5,6 +5,7 @@ module.exports = {
   findBy,
   findById,
   findByRequestKey,
+  updateByRequestKey,
 };
 
 function findBy(filter) {

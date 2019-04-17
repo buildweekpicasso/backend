@@ -28,6 +28,8 @@ exports.up = knex =>
       .string('request_key')
       .unique()
       .notNullable();
+
+    user_images.string('output_url');
   });
 
 exports.down = knex => knex.schema.dropTableIfExists('user_images');
