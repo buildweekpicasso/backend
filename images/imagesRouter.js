@@ -94,15 +94,17 @@ router.post('/process-deep', authMiddleware, (req, res) => {
     const { styleID } = req.body;
     // users.findBy({username}).then(trace("\n\n\n**** IS THIS A VALID USER?"))
     Promise.all([users.findBy({ username }), images.findStyleById(styleID)])
-      .then(trace('\n\n\n **** What is here?'))
-      .then(([[user], style]) => {
+      .then(async ([[user], style]) => {
         const style_url = `${BASE_URL}styles/${style.imageUrl}`;
         const content_url = `${BASE_URL}uploads/${req.file.filename}`;
-        images
+        console.log('\n\n\n\n\n ******* USER: ', user);
+        console.log('\n\n\n\n\n ******* STYLE: ', style);
+        await images
           .addReturningId({
             user_id: user.id,
             image_url: content_url,
           })
+          .then(trace('\n\n\n ***** THIS SHOULD BE AN IMAGE ID'))
           .then(image_id => {
             userImages
               .add({
