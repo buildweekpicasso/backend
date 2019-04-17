@@ -78,6 +78,7 @@ router.post('/process', (req, res) => {
 });
 
 router.post('/process-deep', authMiddleware, (req, res) => {
+  console.log('\n\n\n\n****** PROCESS_DEEP CALLED');
   const request_key = uuid();
   const { username } = req;
   upload(req, res, err => {
