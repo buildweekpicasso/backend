@@ -3,6 +3,7 @@ exports.seed = knex => {
     {
       username: 'example',
       password: 'password',
+      email: 'email@email.com',
     },
   ];
   return knex('users').insert(users);
