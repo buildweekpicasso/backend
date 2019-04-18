@@ -27,8 +27,8 @@ async function add(image) {
   return findById(id);
 }
 
-function addReturningId(image) {
-  const [id] = db('images').insert(image);
+async function addReturningId(image) {
+  const [id] = await db('images').insert(image);
   return id;
 }
 
