@@ -3,13 +3,6 @@ exports.up = knex =>
     public_images.increments();
 
     public_images
-      .integer('image_id')
-      .references('id')
-      .inTable('images')
-      .onUpdate('CASCADE')
-      .onDelete('CASCADE')
-      .notNullable();
-    public_images
       .integer('style_id')
       .references('id')
       .inTable('styles')
@@ -22,7 +15,8 @@ exports.up = knex =>
       .unique()
       .notNullable();
 
-    public_images.string('output_url').notNullable();
+    public_images.string('content_url', 256).notNullable();
+    public_images.string('output_url', 256).notNullable();
   });
 
 exports.down = knex => knex.schema.dropTableIfExists('public_images');
