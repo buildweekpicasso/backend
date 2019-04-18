@@ -201,4 +201,19 @@ router.put('/request/:key', (req, res) => {
     });
 });
 
+router.get('/request/:key', (_req, res) => {
+  const { key } = req.params;
+  userImages
+    .findByRequestKeyReturningUrls(key)
+    .then(entry => {
+      res.status(200).json(entry);
+    })
+    .catch(error => {
+      res.status(404).json({
+        message: 'Failed to find matching request_key',
+        error,
+      });
+    });
+});
+
 module.exports = router;
