@@ -6,8 +6,11 @@ const authMiddleware = require('../auth/authMiddleware');
 const images = require('./imagesModel.js');
 const users = require('../users/usersModel');
 const userImages = require('./userImagesModel.js');
+const publicImages = require('./publicImagesModel.js');
 const imageUtils = require('./imageUtils.js');
 const BASE_URL = 'https://quiet-shore-93010.herokuapp.com/';
+
+const trace = msg => x => (console.log(msg, x), x);
 
 const fileFilter = (_req, file, cb) => {
   file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)
@@ -49,7 +52,7 @@ router.post('/process', (req, res) => {
     images
       .findStyleById(styleID)
       .then(style => {
-        const style_url = `${BASE_URL}styles/${style.imageUrl}`;
+        const style_url = `${BASE_URL}styles/${style.image_url}`;
         const content_url = `${BASE_URL}uploads/${req.file.filename}`;
 
         imageUtils
@@ -59,8 +62,25 @@ router.post('/process', (req, res) => {
             style_url,
             content_url,
           })
+          .then(trace('\n\n\n *** What is image?'))
           .then(image => {
-            res.status(200).json({ ...image, style_url, content_url });
+            publicImages
+              .add({
+                output_url: image.output_url,
+                content_url,
+                style_id: styleID,
+                request_key,
+              })
+              .then(_success => {
+                res.status(200).json({ ...image, style_url, content_url });
+              })
+              .catch(error => {
+                res.status(500).json({
+                  message:
+                    'Error trying to add image to public_images database',
+                  error,
+                });
+              });
           })
           .catch(processErr => {
             res.status(500).json({
@@ -79,8 +99,6 @@ router.post('/process', (req, res) => {
   });
 });
 
-const trace = msg => x => (console.log(msg, x), x);
-
 router.post('/process-deep', authMiddleware, (req, res) => {
   console.log('\n\n\n\n****** PROCESS_DEEP CALLED');
   const request_key = uuid();
@@ -97,7 +115,7 @@ router.post('/process-deep', authMiddleware, (req, res) => {
     // users.findBy({username}).then(trace("\n\n\n**** IS THIS A VALID USER?"))
     Promise.all([users.findBy({ username }), images.findStyleById(styleID)])
       .then(([[user], style]) => {
-        const style_url = `${BASE_URL}styles/${style.imageUrl}`;
+        const style_url = `${BASE_URL}styles/${style.image_url}`;
         const content_url = `${BASE_URL}uploads/${req.file.filename}`;
         console.log('\n\n\n\n\n ******* USER: ', user);
         console.log('\n\n\n\n\n ******* STYLE: ', style);
@@ -197,6 +215,64 @@ router.put('/request/:key', (req, res) => {
       res.status(500).json({
         error,
         message: 'Unable to find that request_key',
+      });
+    });
+});
+
+router.get('/requests/:key', (req, res) => {
+  const { key } = req.params;
+  userImages
+    .findByRequestKeyReturningUrls(key)
+    .then(entry => {
+      res.status(200).json(entry);
+    })
+    .catch(error => {
+      res.status(404).json({
+        message: 'Failed to find matching request_key',
+        error,
+      });
+    });
+});
+
+router.get('/requests', (_req, res) => {
+  userImages
+    .findAllReturningUrls()
+    .then(entries => {
+      res.status(200).json(entries);
+    })
+    .catch(error => {
+      res.status(404).json({
+        message: 'Failed to access user images',
+        error,
+      });
+    });
+});
+
+router.get('/public/:key', (req, res) => {
+  const { key } = req.params;
+  publicImages
+    .findByRequestKeyReturningUrls(key)
+    .then(entry => {
+      res.status(200).json(entry);
+    })
+    .catch(error => {
+      res.status(404).json({
+        message: 'Failed to find matching request_key',
+        error,
+      });
+    });
+});
+
+router.get('/public', (_req, res) => {
+  publicImages
+    .findAllReturningUrls()
+    .then(entries => {
+      res.status(200).json(entries);
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: 'Failed to access public images',
+        error,
       });
     });
 });
