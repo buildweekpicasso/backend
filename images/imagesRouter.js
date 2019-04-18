@@ -201,7 +201,7 @@ router.put('/request/:key', (req, res) => {
     });
 });
 
-router.get('/request/:key', (_req, res) => {
+router.get('/request/:key', (req, res) => {
   const { key } = req.params;
   userImages
     .findByRequestKeyReturningUrls(key)

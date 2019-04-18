@@ -14,10 +14,6 @@ function findBy(filter) {
   return db('user_images').where(filter);
 }
 
-function get() {
-  return db('user_images').where(filter);
-}
-
 async function add({ user_id, image_id, style_id, request_key }) {
   const [id] = await db('user_images').insert({
     user_id,
@@ -52,7 +48,7 @@ function findByRequestKeyReturningUrls(request_key) {
     .join('images', { 'user_images.image_id': 'images.id' })
     .join('users', { 'user_images.user_id': 'users.id' })
     .join('styles', { 'user_images.style_id': 'styles.id' })
-    .where({ 'user_images.requestkey': request_key })
+    .where({ 'user_images.request_key': request_key })
     .first();
 }
 
