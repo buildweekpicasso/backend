@@ -32,7 +32,7 @@ function findAllReturningUrls() {
     .select(
       'public_images.output_url as output_url',
       'public_images.content_url as content_url',
-      'styles.imageUrl as style_url',
+      'styles."imageUrl" as style_url',
     )
     .join('styles', { 'public_images.style_id': 'styles.id' });
 }
