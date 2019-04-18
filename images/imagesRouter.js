@@ -52,7 +52,7 @@ router.post('/process', (req, res) => {
     images
       .findStyleById(styleID)
       .then(style => {
-        const style_url = `${BASE_URL}styles/${style.imageUrl}`;
+        const style_url = `${BASE_URL}styles/${style.image_url}`;
         const content_url = `${BASE_URL}uploads/${req.file.filename}`;
 
         imageUtils
@@ -115,7 +115,7 @@ router.post('/process-deep', authMiddleware, (req, res) => {
     // users.findBy({username}).then(trace("\n\n\n**** IS THIS A VALID USER?"))
     Promise.all([users.findBy({ username }), images.findStyleById(styleID)])
       .then(([[user], style]) => {
-        const style_url = `${BASE_URL}styles/${style.imageUrl}`;
+        const style_url = `${BASE_URL}styles/${style.image_url}`;
         const content_url = `${BASE_URL}uploads/${req.file.filename}`;
         console.log('\n\n\n\n\n ******* USER: ', user);
         console.log('\n\n\n\n\n ******* STYLE: ', style);

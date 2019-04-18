@@ -42,7 +42,7 @@ function findByRequestKeyReturningUrls(request_key) {
     .select(
       'user_images.output_url as output_url',
       'images.image_url as content_url',
-      'styles.imageUrl as style_url',
+      'styles.image_url as style_url',
       'users.username as username',
     )
     .join('images', { 'user_images.image_id': 'images.id' })
@@ -57,7 +57,7 @@ function findAllReturningUrls() {
     .select(
       'user_images.output_url as output_url',
       'images.image_url as content_url',
-      'styles.imageUrl as style_url',
+      'styles.image_url as style_url',
       'users.username as username',
     )
     .join('images', { 'user_images.image_id': 'images.id' })
