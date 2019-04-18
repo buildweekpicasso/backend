@@ -52,12 +52,13 @@ router.post('/process', (req, res) => {
         const style_url = `${BASE_URL}styles/${style.imageUrl}`;
         const content_url = `${BASE_URL}uploads/${req.file.filename}`;
 
-        ImageUtils.process({
-          fast: true,
-          request_key,
-          style_url,
-          content_url,
-        })
+        imageUtils
+          .processImage({
+            fast: true,
+            request_key,
+            style_url,
+            content_url,
+          })
           .then(image => {
             res.status(200).json({ ...image, style_url, content_url });
           })
@@ -101,12 +102,13 @@ router.post('/process-deep', authMiddleware, (req, res) => {
         console.log('\n\n\n\n\n ******* USER: ', user);
         console.log('\n\n\n\n\n ******* STYLE: ', style);
 
-        ImageUtils.process({
-          fast: false,
-          request_key,
-          style_url,
-          content_url,
-        })
+        imageUtils
+          .processImage({
+            fast: false,
+            request_key,
+            style_url,
+            content_url,
+          })
           .then(success => {
             images
               .addReturningId({
@@ -170,17 +172,25 @@ router.put('/request/:key', (req, res) => {
         .findByRequestKey(key)
         .then(userImage => {
           console.log('userImage', userImage);
-          users.findById(userImage.user_id)
-          .then(user => {
-            imageUtils.emailImage(user.email, output_url);
-            res.status(200).json(entry);
-          })
-          .catch(findUserErr => {
-            res.status(404).json({ error: findUserErr, message: 'Error finding an existing user by ID on the user_image in /request/:key' });
-          });
+          users
+            .findById(userImage.user_id)
+            .then(user => {
+              imageUtils.emailImage(user.email, output_url);
+              res.status(200).json(entry);
+            })
+            .catch(findUserErr => {
+              res.status(404).json({
+                error: findUserErr,
+                message:
+                  'Error finding an existing user by ID on the user_image in /request/:key',
+              });
+            });
         })
         .catch(findUserImageErr => {
-          res.status(404).json({ error: findUserImageErr, message: 'Error finding an existing userImage by ID' });
+          res.status(404).json({
+            error: findUserImageErr,
+            message: 'Error finding an existing userImage by ID',
+          });
         });
     })
     .catch(error => {
