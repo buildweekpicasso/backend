@@ -36,6 +36,5 @@ function findAllReturningUrls() {
       "s.image_url as style_url",
     )
     .join("styles as s", { "pi.style_id": "s.id" })
-    .groupBy("pi.id");
   // return db.raw("select public_images.output_url as output_url, public_images.content_url as content_url, styles.image_url as style_url from public_images inner join styles on public_images.style_id = styles.id")
 }
