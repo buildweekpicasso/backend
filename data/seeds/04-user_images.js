@@ -14,6 +14,13 @@ exports.seed = knex => {
       style_id: 1,
       request_key: 'multipass',
     },
+    {
+      output_url: null,
+      user_id: 2,
+      image_id: 1,
+      style_id: 1,
+      request_key: 'digiorno',
+    },
   ];
   return knex('user_images').insert(userImages);
 };
