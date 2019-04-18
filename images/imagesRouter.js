@@ -52,12 +52,8 @@ router.post('/process', (req, res) => {
         const style_url = `${BASE_URL}styles/${style.imageUrl}`;
         const content_url = `${BASE_URL}uploads/${req.file.filename}`;
 
-        console.log({
-          style_url,
-          content_url,
-        });
         imageUtils
-          .process({
+          .processImage({
             fast: true,
             request_key,
             style_url,
@@ -107,7 +103,7 @@ router.post('/process-deep', authMiddleware, (req, res) => {
         console.log('\n\n\n\n\n ******* STYLE: ', style);
 
         imageUtils
-          .process({
+          .processImage({
             fast: false,
             request_key,
             style_url,
