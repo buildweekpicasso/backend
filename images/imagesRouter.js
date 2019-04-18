@@ -264,15 +264,14 @@ router.get('/public/:key', (req, res) => {
 });
 
 router.get('/public', (_req, res) => {
-  console.log('\n\n\n ***** PUBLIC GET ALL');
   publicImages
     .findAllReturningUrls()
     .then(entries => {
       res.status(200).json(entries);
     })
     .catch(error => {
-      res.status(404).json({
-        message: 'Failed to access user images',
+      res.status(500).json({
+        message: 'Failed to access public images',
         error,
       });
     });

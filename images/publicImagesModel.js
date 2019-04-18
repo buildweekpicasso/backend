@@ -1,3 +1,4 @@
+/* eslint-disable */
 const db = require('../data/dbConfig.js');
 
 module.exports = {
@@ -28,11 +29,12 @@ function findByRequestKeyReturningUrls(request_key) {
 }
 
 function findAllReturningUrls() {
-  return db('public_images')
+  return db("public_images as pi")
     .select(
-      'public_images.output_url as output_url',
-      'public_images.content_url as content_url',
-      'styles.image_url as style_url',
+      "pi.output_url",
+      "pi.content_url",
+      "s.image_url as style_url",
     )
-    .join('styles', { 'public_images.style_id': 'styles.id' });
+    .join("styles as s", { "pi.style_id": "s.id" })
+    .groupBy("pi.id");
 }
