@@ -29,6 +29,6 @@ function findByRequestKeyReturningUrls(request_key) {
 
 function findAllReturningUrls() {
   return db('public_images as pi')
-    .select('pi.output_url', 'pi.content_url', 's.image_url as style_url')
+    .select('pi.request_key', 'pi.output_url', 'pi.content_url', 's.image_url as style_url')
     .join('styles as s', { 'pi.style_id': 's.id' });
 }
