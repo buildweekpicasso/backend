@@ -52,6 +52,10 @@ router.post('/process', (req, res) => {
         const style_url = `${BASE_URL}styles/${style.imageUrl}`;
         const content_url = `${BASE_URL}uploads/${req.file.filename}`;
 
+        console.log({
+          style_url,
+          content_url,
+        });
         imageUtils
           .process({
             fast: true,
@@ -179,22 +183,18 @@ router.put('/request/:key', (req, res) => {
               res.status(200).json(entry);
             })
             .catch(findUserErr => {
-              res
-                .status(404)
-                .json({
-                  error: findUserErr,
-                  message:
-                    'Error finding an existing user by ID on the user_image in /request/:key',
-                });
+              res.status(404).json({
+                error: findUserErr,
+                message:
+                  'Error finding an existing user by ID on the user_image in /request/:key',
+              });
             });
         })
         .catch(findUserImageErr => {
-          res
-            .status(404)
-            .json({
-              error: findUserImageErr,
-              message: 'Error finding an existing userImage by ID',
-            });
+          res.status(404).json({
+            error: findUserImageErr,
+            message: 'Error finding an existing userImage by ID',
+          });
         });
     })
     .catch(error => {
