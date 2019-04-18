@@ -6,20 +6,13 @@ module.exports = {
   findByRequestKeyReturningUrls,
 };
 
-async function add({ output_url, content_url, style_id, request_key }) {
-  const [id] = await db('public_images').insert({
+function add({ output_url, content_url, style_id, request_key }) {
+  return db('public_images').insert({
     content_url,
     style_id,
     output_url,
     request_key,
   });
-  return findById(id);
-}
-
-function findById(id) {
-  return db('public_images')
-    .where({ id })
-    .first();
 }
 
 function findByRequestKeyReturningUrls(request_key) {
