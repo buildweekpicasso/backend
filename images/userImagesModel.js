@@ -2,13 +2,19 @@ const db = require('../data/dbConfig.js');
 
 module.exports = {
   add,
+  findAllReturningUrls,
   findBy,
   findById,
   findByRequestKey,
+  findByRequestKeyReturningUrls,
   updateByRequestKey,
 };
 
 function findBy(filter) {
+  return db('user_images').where(filter);
+}
+
+function get() {
   return db('user_images').where(filter);
 }
 
@@ -32,6 +38,35 @@ function findById(id) {
 function findByRequestKey(request_key) {
   return db('user_images')
     .where({ request_key })
+    .first();
+}
+
+function findByRequestKeyReturningUrls(request_key) {
+  return db('user_images')
+    .select(
+      'user_images.output_url as output_url',
+      'images.image_url as content_url',
+      'styles.imageUrl as style_url',
+      'users.username as username',
+    )
+    .join('images', { 'user_images.image_id': 'images.id' })
+    .join('users', { 'user_images.user_id': 'users.id' })
+    .join('styles', { 'user_images.style_id': 'styles.id' })
+    .where({ 'user_images.requestkey': request_key })
+    .first();
+}
+
+function findAllReturningUrls() {
+  return db('user_images')
+    .select(
+      'user_images.output_url as output_url',
+      'images.image_url as content_url',
+      'styles.imageUrl as style_url',
+      'users.username as username',
+    )
+    .join('images', { 'user_images.image_id': 'images.id' })
+    .join('users', { 'user_images.user_id': 'users.id' })
+    .join('styles', { 'user_images.style_id': 'styles.id' })
     .first();
 }
 
