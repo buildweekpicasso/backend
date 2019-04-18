@@ -6,8 +6,11 @@ const authMiddleware = require('../auth/authMiddleware');
 const images = require('./imagesModel.js');
 const users = require('../users/usersModel');
 const userImages = require('./userImagesModel.js');
+const publicImages = require('./publicImagesModel.js');
 const imageUtils = require('./imageUtils.js');
 const BASE_URL = 'https://quiet-shore-93010.herokuapp.com/';
+
+const trace = msg => x => (console.log(msg, x), x);
 
 const fileFilter = (_req, file, cb) => {
   file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)
@@ -59,8 +62,25 @@ router.post('/process', (req, res) => {
             style_url,
             content_url,
           })
+          .then(trace('\n\n\n *** What is image?'))
           .then(image => {
-            res.status(200).json({ ...image, style_url, content_url });
+            publicImages
+              .add({
+                output_url: image.output_url,
+                content_url,
+                style_id: styleID,
+                request_key,
+              })
+              .then(_success => {
+                res.status(200).json({ ...image, style_url, content_url });
+              })
+              .catch(error => {
+                res.status(500).json({
+                  message:
+                    'Error trying to add image to public_images database',
+                  error,
+                });
+              });
           })
           .catch(processErr => {
             res.status(500).json({
@@ -78,8 +98,6 @@ router.post('/process', (req, res) => {
       });
   });
 });
-
-const trace = msg => x => (console.log(msg, x), x);
 
 router.post('/process-deep', authMiddleware, (req, res) => {
   console.log('\n\n\n\n****** PROCESS_DEEP CALLED');
