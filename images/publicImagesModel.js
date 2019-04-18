@@ -30,7 +30,7 @@ function findByRequestKeyReturningUrls(request_key) {
       'styles.imageUrl as style_url',
     )
     .join('styles', { 'public_images.style_id': 'styles.id' })
-    .where({ 'public_images.requestkey': request_key })
+    .where({ 'public_images.request_key': request_key })
     .first();
 }
 

@@ -248,4 +248,33 @@ router.get('/requests', (_req, res) => {
     });
 });
 
+router.get('/public/:key', (req, res) => {
+  const { key } = req.params;
+  publicImages
+    .findByRequestKeyReturningUrls(key)
+    .then(entry => {
+      res.status(200).json(entry);
+    })
+    .catch(error => {
+      res.status(404).json({
+        message: 'Failed to find matching request_key',
+        error,
+      });
+    });
+});
+
+router.get('/public', (_req, res) => {
+  publicImages
+    .findAllReturningUrls()
+    .then(entries => {
+      res.status(200).json(entries);
+    })
+    .catch(error => {
+      res.status(404).json({
+        message: 'Failed to access user images',
+        error,
+      });
+    });
+});
+
 module.exports = router;
