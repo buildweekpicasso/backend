@@ -264,6 +264,7 @@ router.get('/public/:key', (req, res) => {
 });
 
 router.get('/public', (_req, res) => {
+  console.log('\n\n\n ***** PUBLIC GET ALL');
   publicImages
     .findAllReturningUrls()
     .then(entries => {
