@@ -2,6 +2,7 @@ const db = require('../data/dbConfig.js');
 
 module.exports = {
   add,
+  addReturningId,
   find,
   findBy,
   findById,
@@ -24,6 +25,11 @@ function findBy(filter) {
 async function add(image) {
   const [id] = await db('images').insert(image);
   return findById(id);
+}
+
+async function addReturningId(image) {
+  const [id] = await db('images').insert(image);
+  return id;
 }
 
 function findById(id) {

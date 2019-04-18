@@ -6,6 +6,7 @@
   "author": "Peter Murphy and Lowell Richardson",
   "license": "MIT",
   "dependencies": {
+    "@sendgrid/mail": "^6.3.1",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.14.0",
     "cors": "^2.8.5",
@@ -17,6 +18,7 @@
     "knex": "^0.16.5",
     "knex-cleaner": "^1.1.4",
     "multer": "^1.4.1",
+    "node-fetch": "^2.3.0",
     "pg": "^7.9.0",
     "uuid": "^3.3.2"
   },
