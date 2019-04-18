@@ -201,7 +201,7 @@ router.put('/request/:key', (req, res) => {
     });
 });
 
-router.get('/request/:key', (req, res) => {
+router.get('/requests/:key', (req, res) => {
   const { key } = req.params;
   userImages
     .findByRequestKeyReturningUrls(key)
@@ -211,6 +211,20 @@ router.get('/request/:key', (req, res) => {
     .catch(error => {
       res.status(404).json({
         message: 'Failed to find matching request_key',
+        error,
+      });
+    });
+});
+
+router.get('/requests', (_req, res) => {
+  userImages
+    .findAllReturningUrls()
+    .then(entries => {
+      res.status(200).json(entries);
+    })
+    .catch(error => {
+      res.status(404).json({
+        message: 'Failed to access user images',
         error,
       });
     });

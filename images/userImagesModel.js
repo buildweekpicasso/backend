@@ -63,7 +63,7 @@ function findAllReturningUrls() {
     .join('images', { 'user_images.image_id': 'images.id' })
     .join('users', { 'user_images.user_id': 'users.id' })
     .join('styles', { 'user_images.style_id': 'styles.id' })
-    .first();
+    .whereNotNull('user_images.output_url');
 }
 
 function updateByRequestKey(request_key, obj) {
